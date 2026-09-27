@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="liquid-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA LIQUID — Modern Student Life, Academics & Mental Wellness OS</title>
+  <meta name="description" content="A vibrant, modern, liquid glass and Apple-minimalist student operating system for academic workload management, deep focus flow, daily circadian routines, and mental wellness.">
+  <meta name="theme-color" content="#ffffff">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23000000'/><circle cx='50' cy='50' r='20' fill='%23ffffff'/></svg>">
+  
+  <!-- Google Fonts: Luxca / Glamore Luxury Display Serif Aesthetic & Plus Jakarta Sans / JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Italiana&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-white">
+
+  <!-- ====================================================================
+       INTERACTIVE CANVAS LAYER: LIQUID GLASS EFFECT DOTS WITH CURSOR PHYSICS
+       ==================================================================== -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-lights">
+    <div class="ambient-orb orb-top-left"></div>
+    <div class="ambient-orb orb-bottom-right"></div>
+    <div class="ambient-orb orb-center"></div>
+  </div>
+
+  <!-- ====================================================================
+       MAIN APPLICATION SHELL
+       ==================================================================== -->
+  <div class="app-container">
+
+    <!-- FLOATING APPLE-STYLE LIQUID GLASS TOP BAR -->
+    <header>
+      <nav class="top-nav-bar" id="main-navigation" aria-label="Aura Navigation">
+        <!-- Brand identity -->
+        <a href="#overview" class="nav-brand" title="AURA Student OS">
+          <div class="brand-icon-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <div class="brand-text-block">
+            <span class="brand-name">AURA <span style="font-weight: 300; font-family: var(--font-sans-body); font-size: 0.85em; opacity: 0.85;">LIQUID</span></span>
+            <span class="brand-tagline">Student Life & Wellness OS</span>
+          </div>
+        </a>
+
+        <!-- Modular Segmented Control Tabs (Stitch Type Layout Filter) -->
+        <div class="nav-segmented-control" role="tablist">
+          <button class="nav-tab-btn active" data-cat="all" role="tab">All Modules</button>
+          <button class="nav-tab-btn" data-cat="academic" role="tab">Workload</button>
+          <button class="nav-tab-btn" data-cat="focus" role="tab">Focus Flow</button>
+          <button class="nav-tab-btn" data-cat="wellness" role="tab">Wellness</button>
+          <button class="nav-tab-btn" data-cat="circadian" role="tab">Circadian</button>
+          <button class="nav-tab-btn" data-cat="support" role="tab">Peer Support</button>
+        </div>
+
+        <!-- Right Quick Controls: Theme Toggle & Clock & Modular Settings -->
+        <div class="nav-right-actions">
+          <!-- Interactive Theme Switcher: White Glass vs Antigravity Dark -->
+          <div class="theme-switch-pill" role="radiogroup" aria-label="Theme Selection">
+            <button class="theme-switch-btn active" id="btn-theme-white" data-theme-val="liquid-white" title="White Background with Glass Effect Dots">
+              ⚪ White Glass
+            </button>
+            <button class="theme-switch-btn" id="btn-theme-dark" data-theme-val="antigravity-dark" title="Antigravity Dark Mode">
+              ⚫ Dark Mode
+            </button>
+          </div>
+
+          <div class="clock-display" id="nav-live-clock">
+            Loading...
+          </div>
+
+          <button class="btn-glass-pill btn-icon-pill" id="btn-open-theme-settings" title="Modular Stitch Customizer & Background Optics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ====================================================================
+           HERO STAGE: Luxca / Glamore Luxury Display Serif & Concentric Rings
+           ==================================================================== -->
+      <section class="hero-stage" id="overview">
+        <div class="hero-left-content">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div class="pill-badge active-pulse">
+              <span class="live-dot"></span>
+              <span>CIRCADIAN ENGINE SYNCHRONIZED</span>
+            </div>
+            <div class="pill-badge">
+              <span>✦ LIQUID GLASS & APPLE MINIMALISM</span>
+            </div>
+          </div>
+
+          <h1 class="hero-title-main font-luxury-display">
+            Harmonize Your <span class="text-gradient-luxury">Mind, Academics</span> & Life.
+          </h1>
+
+          <p class="hero-desc">
+            A technology-driven ecosystem designed for university students to balance academic workload, master time and productivity, sustain circadian energy, and safeguard mental well-being with effortless grace.
+          </p>
+
+          <div class="hero-cta-row">
+            <button class="btn-primary-pill" id="btn-open-add-task">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add Assignment</span>
+            </button>
+            <a href="#focus-studio" class="btn-glass-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Launch 50m Flow</span>
+            </a>
+            <button class="btn-glass-pill" id="trigger-sos-modal" style="border-color: rgba(239, 68, 68, 0.4); color: #ef4444;">
+              <span>🚨 Campus SOS</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Apple Watch-Style Triple Concentric Rings -->
+        <div class="glass-panel hero-rings-card">
+          <div class="rings-header">
+            <div>
+              <div class="rings-title">Holistic Equilibrium</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Daily Multi-Vector Balance Index</div>
+            </div>
+            <div class="pill-badge" style="font-size: 0.75rem; padding: 4px 10px;">
+              <span>Live Synced</span>
+            </div>
+          </div>
+
+          <!-- Triple SVG Rings (Strict Apple Monochrome Black & White Gradient) -->
+          <div class="rings-visual-wrapper">
+            <svg class="rings-svg" viewBox="0 0 180 180">
+              <defs>
+                <linearGradient id="monoGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#000000"/>
+                  <stop offset="100%" stop-color="#4b5563"/>
+                </linearGradient>
+                <linearGradient id="monoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#374151"/>
+                  <stop offset="100%" stop-color="#9ca3af"/>
+                </linearGradient>
+                <linearGradient id="monoGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6b7280"/>
+                  <stop offset="100%" stop-color="#d1d5db"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Ring 1: Academic Tasks (r=70) -->
+              <circle class="ring-bg" cx="90" cy="90" r="70" stroke-width="10"/>
+              <circle id="ring-progress-1" cx="90" cy="90" r="70" stroke="var(--ring-primary-1)" stroke-width="10"/>
+
+              <!-- Ring 2: Focus Minutes (r=52) -->
+              <circle class="ring-bg" cx="90" cy="90" r="52" stroke-width="10"/>
+              <circle id="ring-progress-2" cx="90" cy="90" r="52" stroke="var(--ring-primary-2)" stroke-width="10"/>
+
+              <!-- Ring 3: Well-being Habits (r=34) -->
+              <circle class="ring-bg" cx="90" cy="90" r="34" stroke-width="10"/>
+              <circle id="ring-progress-3" cx="90" cy="90" r="34" stroke="var(--ring-primary-3)" stroke-width="10"/>
+            </svg>
+
+            <!-- Center Metric -->
+            <div class="ring-center-stat">
+              <div class="ring-center-val" id="rings-center-val">82%</div>
+              <div class="ring-center-label">Harmony</div>
+            </div>
+          </div>
+
+          <!-- Triple Rings Legend -->
+          <div class="rings-legend">
+            <div class="legend-item">
+              <div class="legend-badge">
+                <span class="legend-dot" style="background: var(--ring-primary-1);"></span>
+                <span>Academics</span>
+              </div>
+              <div class="legend-val" id="legend-val-tasks">3/5</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-badge">
+                <span class="legend-dot" style="background: var(--ring-primary-2);"></span>
+                <span>Focus</span>
+              </div>
+              <div class="legend-val" id="legend-val-focus">75m</div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-badge">
+                <span class="legend-dot" style="background: var(--ring-primary-3);"></span>
+                <span>Routines</span>
+              </div>
+              <div class="legend-val" id="legend-val-habits">2/4</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MODULAR "STITCH" BENTO GRID ARCHITECTURE
+           Strict 16px Rounded Cards | Pill Buttons | Liquid Glass Theme
+           ==================================================================== -->
+      <div class="modular-grid" id="main-modular-grid">
+
+        <!-- ------------------------------------------------------------------
+             MODULE 1: Academic Workload Management & Cognitive Balance Radar
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-7" data-module-id="mod-workload" data-module-category="academic" id="academic-workload">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Academic Workload & Deadline Matrix</h2>
+                <div class="card-subtitle">Intelligent cognitive load balancing & priority roadmap</div>
+              </div>
+            </div>
+            <button class="btn-primary-pill" style="padding: 6px 16px; font-size: 0.75rem;" onclick="document.getElementById('modal-add-task').classList.add('active')">
+              + New Task
+            </button>
+          </div>
+
+          <div class="card-body">
+            <!-- Cognitive Load Meter Banner -->
+            <div class="cognitive-meter-box">
+              <div class="cog-stat-info">
+                <div class="cog-title">Cognitive Load Index</div>
+                <div class="cog-desc" id="cog-score-desc">Calculating strain based on upcoming due dates...</div>
+              </div>
+              <div class="cog-score-pill" id="cog-score-val">
+                35% • OPTIMAL
+              </div>
+            </div>
+
+            <!-- Task Filter Chips -->
+            <div class="task-filter-rail">
+              <button class="chip-filter active" data-filter="all">All Assignments</button>
+              <button class="chip-filter" data-filter="due-today">Due Soon</button>
+              <button class="chip-filter" data-filter="deep-work">Deep Intensity</button>
+              <button class="chip-filter" data-filter="cs">CS & Systems</button>
+            </div>
+
+            <!-- Task Item List (Rendered dynamically) -->
+            <div class="task-list" id="academic-task-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 2: Liquid Focus & Time Studio (Apple Pomodoro & Sound Synth)
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-5" data-module-id="mod-focus" data-module-category="focus" id="focus-studio">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Deep Work & Flow Studio</h2>
+                <div class="card-subtitle">Apple-style time dial with acoustic synthesis</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="focus-studio-container">
+              <!-- Preset Selector -->
+              <div class="focus-presets-pill-bar">
+                <button class="focus-preset-btn" data-mins="25">25m Sprint</button>
+                <button class="focus-preset-btn active" data-mins="50">50m Deep</button>
+                <button class="focus-preset-btn" data-mins="90">90m Flow</button>
+                <button class="focus-preset-btn" data-mins="10">10m Break</button>
+              </div>
+
+              <!-- SVG Liquid Dial -->
+              <div class="focus-dial-wrapper">
+                <svg class="focus-dial-svg" viewBox="0 0 200 200">
+                  <circle class="focus-dial-circle-bg" cx="100" cy="100" r="90"/>
+                  <circle class="focus-dial-circle-progress" id="focus-dial-circle-progress" cx="100" cy="100" r="90"/>
+                </svg>
+
+                <div class="focus-dial-center">
+                  <div class="focus-timer-digits font-luxury-display" id="focus-timer-digits">50:00</div>
+                  <div class="focus-state-badge">ALPHA FLOW STATE</div>
+                </div>
+              </div>
+
+              <!-- Controls: Black & White Primary Accent -->
+              <div class="focus-controls-row">
+                <button class="btn-primary-pill" id="btn-focus-toggle">
+                  <span>Start Flow</span>
+                </button>
+                <button class="btn-glass-pill" id="btn-focus-reset">
+                  <span>Reset</span>
+                </button>
+              </div>
+
+              <!-- Ambient Sound Synthesis Dock -->
+              <div class="soundscape-bar">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
+                  SOUNDSCAPE:
+                </div>
+                <div class="soundscape-selector">
+                  <button class="sound-chip active" data-sound="none">Mute</button>
+                  <button class="sound-chip" data-sound="rain">🌧️ Rain</button>
+                  <button class="sound-chip" data-sound="binaural">🧠 40Hz</button>
+                  <button class="sound-chip" data-sound="cosmic">🪐 Void</button>
+                </div>
+                <input type="range" class="range-slider-liquid" id="sound-volume-slider" min="0" max="1" step="0.05" value="0.4" style="width: 70px;" title="Volume">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 3: Mental Wellness & 4-7-8 Guided Breathing Sanctuary
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-6" data-module-id="mod-wellness" data-module-category="wellness" id="mental-wellness">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Mental Wellness & Stress Radar</h2>
+                <div class="card-subtitle">Daily emotional calibration & 4-7-8 parasympathetic reset</div>
+              </div>
+            </div>
+            <div class="pill-badge" style="font-size: 0.75rem;">
+              <span>Safe Space</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- 5-Mood Pulse Selector -->
+            <div class="wellness-mood-strip">
+              <div class="mood-selector-pill" data-mood="serene">
+                <div class="mood-emoji">🌿</div>
+                <div class="mood-label">Serene</div>
+              </div>
+              <div class="mood-selector-pill active" data-mood="balanced">
+                <div class="mood-emoji">⚖️</div>
+                <div class="mood-label">Balanced</div>
+              </div>
+              <div class="mood-selector-pill" data-mood="stretched">
+                <div class="mood-emoji">⚡</div>
+                <div class="mood-label">Stretched</div>
+              </div>
+              <div class="mood-selector-pill" data-mood="heavy">
+                <div class="mood-emoji">🌊</div>
+                <div class="mood-label">High Load</div>
+              </div>
+              <div class="mood-selector-pill" data-mood="overwhelmed">
+                <div class="mood-emoji">🛑</div>
+                <div class="mood-label">Exhausted</div>
+              </div>
+            </div>
+
+            <!-- AI Micro-Coaching Advice Pill -->
+            <div id="wellness-ai-advice" style="font-size: 0.8125rem; color: var(--text-primary); background: var(--badge-bg); border: var(--badge-border); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px;">
+              ⚖️ Harmonic balance: Maintain consistent 50-min sprints with 10-min screen-free breaks.
+            </div>
+
+            <!-- 4-7-8 Breathing Bubble Stage -->
+            <div class="breathing-bubble-stage">
+              <div class="bubble-halo">
+                <div class="bubble-core" id="breathing-bubble-core">
+                  <div class="breath-seconds-counter font-luxury-display" id="breath-seconds-counter">4-7-8</div>
+                </div>
+              </div>
+
+              <div class="breath-phase-caption font-luxury-display" id="breath-phase-caption">Liquid Sanctuary</div>
+              <div class="breath-instruction" id="breath-instruction">
+                Tap button to begin rhythmic 4s Inhale, 7s Hold, 8s Exhale cycle.
+              </div>
+
+              <button class="btn-primary-pill" id="btn-breath-toggle">
+                Begin 4-7-8 Breath
+              </button>
+            </div>
+
+            <!-- Micro Decompression Journal -->
+            <div class="journal-micro-box">
+              <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">
+                ✍️ 1 Micro-Win Today (Decompression Anchor)
+              </div>
+              <textarea class="journal-input" id="micro-journal-input" rows="2" placeholder="Record one small accomplishment to reinforce positive psychological momentum..."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 4: Circadian Routine & Daily Habit Engine
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-6" data-module-id="mod-circadian" data-module-category="circadian" id="circadian-engine">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Circadian Rhythm & Habit Cadence</h2>
+                <div class="card-subtitle">Align energy peaks with academic demands</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Circadian Day Timeline -->
+            <div class="circadian-timeline-container">
+              <!-- Morning Clarity -->
+              <div class="circadian-block" id="phase-morning">
+                <div class="circadian-left">
+                  <span class="circadian-time-badge">07:00 – 11:00</span>
+                  <div class="circadian-info">
+                    <h4>Morning Clarity & Cortisol Synchronization</h4>
+                    <p>Sunlight exposure, hydration, reviewing daily MITs (Most Important Tasks).</p>
+                  </div>
+                </div>
+                <div class="pill-badge" style="font-size: 0.6875rem;">Phase 1</div>
+              </div>
+
+              <!-- Peak Focus -->
+              <div class="circadian-block active-phase" id="phase-deep">
+                <div class="circadian-left">
+                  <span class="circadian-time-badge">11:00 – 16:00</span>
+                  <div class="circadian-info">
+                    <h4>Peak Academic Velocity & Problem Sets</h4>
+                    <p>Highest prefrontal cortex alertness. Optimal for Math, CS, and Exams.</p>
+                  </div>
+                </div>
+                <div class="pill-badge active-pulse" style="font-size: 0.6875rem;">
+                  <span class="live-dot"></span>
+                  <span>Active Now</span>
+                </div>
+              </div>
+
+              <!-- Afternoon Recharge -->
+              <div class="circadian-block" id="phase-recharge">
+                <div class="circadian-left">
+                  <span class="circadian-time-badge">16:00 – 20:00</span>
+                  <div class="circadian-info">
+                    <h4>Consolidation, Group Discussion & Movement</h4>
+                    <p>Study pods, light cardio, physical activity, spaced repetition review.</p>
+                  </div>
+                </div>
+                <div class="pill-badge" style="font-size: 0.6875rem;">Phase 3</div>
+              </div>
+
+              <!-- Night Winddown -->
+              <div class="circadian-block" id="phase-winddown">
+                <div class="circadian-left">
+                  <span class="circadian-time-badge">20:00 – 23:30</span>
+                  <div class="circadian-info">
+                    <h4>Cognitive Decompression & Melatonin Prep</h4>
+                    <p>Dim warm lighting, 4-7-8 breathing, zero blue light, sleep readiness.</p>
+                  </div>
+                </div>
+                <div class="pill-badge" style="font-size: 0.6875rem;">Phase 4</div>
+              </div>
+            </div>
+
+            <!-- Habits Checklist -->
+            <div class="habits-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div style="font-size: 0.8125rem; font-weight: 600; color: var(--text-primary);">
+                  Daily Habit Streaks
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                  Target: 4/4 Habits
+                </div>
+              </div>
+
+              <div id="habits-list-container">
+                <!-- Rendered dynamically via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 5: Semester Horizon & Target GPA Trajectory
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-6" data-module-id="mod-gpa" data-module-category="academic" id="gpa-horizon">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Semester Horizon & GPA Trajectory</h2>
+                <div class="card-subtitle">Effort-to-grade predictive balancing simulator</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body gpa-card-content">
+            <!-- GPA Slider -->
+            <div class="gpa-slider-group">
+              <div class="slider-label-row">
+                <span style="color: var(--text-secondary);">Target Semester GPA:</span>
+                <span class="font-luxury-display" style="font-size: 1.35rem; color: var(--text-primary); font-weight: 700;" id="display-target-gpa">3.85</span>
+              </div>
+              <input type="range" class="range-slider-liquid" id="slider-target-gpa" min="2.5" max="4.0" step="0.05" value="3.85">
+            </div>
+
+            <!-- Credits Slider -->
+            <div class="gpa-slider-group">
+              <div class="slider-label-row">
+                <span style="color: var(--text-secondary);">Course Load Credits:</span>
+                <span style="font-family: var(--font-mono); color: var(--text-primary); font-weight: 600;" id="display-credit-load">16 Credits</span>
+              </div>
+              <input type="range" class="range-slider-liquid" id="slider-credit-load" min="12" max="22" step="1" value="16">
+            </div>
+
+            <!-- Simulation Calculations -->
+            <div class="gpa-simulation-result">
+              <div class="gpa-res-box">
+                <div class="gpa-res-val font-luxury-display" id="calc-study-hours">28h/wk</div>
+                <div class="gpa-res-lbl">Required Deep Study</div>
+              </div>
+              <div class="gpa-res-box">
+                <div class="gpa-res-val font-luxury-display" id="calc-cognitive-margin" style="color: #10b981;">HEALTHY (+3.2h)</div>
+                <div class="gpa-res-lbl">Cognitive Safety Margin</div>
+              </div>
+            </div>
+
+            <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+              💡 Predictive model indicates that scheduling two 50-minute focus blocks per day during your peak circadian window (11:00 – 16:00) satisfies this academic target with zero weekend cramming.
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------
+             MODULE 6: Peer Study Circles & Campus Support Network
+             ------------------------------------------------------------------ -->
+        <section class="glass-panel col-6" data-module-id="mod-support" data-module-category="support" id="peer-support">
+          <div class="card-header-modular">
+            <div class="card-title-group">
+              <div class="card-icon-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="card-title font-luxury-display">Live Peer Pods & Campus Circles</h2>
+                <div class="card-subtitle">Silent accountability rooms & student safety net</div>
+              </div>
+            </div>
+            <div class="pill-badge active-pulse" style="font-size: 0.75rem;">
+              <span class="live-dot"></span>
+              <span>44 Online</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Peer Study Rooms -->
+            <div class="peer-pods-list" id="peer-pods-container">
+              <!-- Rendered dynamically via JS -->
+            </div>
+
+            <!-- Campus Support SOS Banner -->
+            <div class="campus-sos-strip">
+              <div>
+                <div class="sos-text-title">Need Confidential Academic or Mental Health Support?</div>
+                <div class="sos-text-sub">Campus counseling, peer listeners, and dean extension advocate available 24/7.</div>
+              </div>
+              <button class="btn-glass-pill" style="border-color: rgba(239, 68, 68, 0.4); color: #ef4444; font-size: 0.75rem; padding: 6px 14px;" onclick="document.getElementById('modal-sos').classList.add('active')">
+                View SOS Contacts
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ====================================================================
+         FOOTER: Typography & Design Credits
+         ==================================================================== -->
+    <footer class="app-footer">
+      <div>
+        <span class="font-luxury-display" style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">AURA LIQUID</span> — Crafted with <em>Luxca</em> & <em>Glamore</em> Luxury Display Serif aesthetics, liquid glassmorphism, and Apple minimalism.
+      </div>
+      <div class="footer-links">
+        <a href="#overview" class="footer-link">Overview</a>
+        <a href="#academic-workload" class="footer-link">Workload Matrix</a>
+        <a href="#focus-studio" class="footer-link">Focus Studio</a>
+        <a href="#mental-wellness" class="footer-link">Mental Wellness</a>
+        <a href="#circadian-engine" class="footer-link">Circadian Rhythm</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ====================================================================
+       MODAL 1: ADD ACADEMIC TASK / ASSIGNMENT
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-add-task">
+    <div class="modal-sheet">
+      <button class="modal-close-btn" id="btn-close-task-modal" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div style="margin-bottom: 20px;">
+        <h3 class="font-luxury-display" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 4px;">Map Academic Assignment</h3>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary);">Input course details to dynamically calculate your cognitive load balance index.</p>
+      </div>
+
+      <form id="form-add-task">
+        <div class="form-group">
+          <label class="form-label" for="task-input-title">Assignment Title</label>
+          <input type="text" class="form-input" id="task-input-title" placeholder="e.g. Distributed Systems Lab #3" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="task-input-course">Course Code</label>
+            <input type="text" class="form-input" id="task-input-course" placeholder="e.g. CS 350" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-input-due">Due Horizon</label>
+            <input type="text" class="form-input" id="task-input-due" placeholder="e.g. In 3 Days" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="task-input-weight">Cognitive Intensity Weight</label>
+          <select class="form-select" id="task-input-weight">
+            <option value="Light">Light (Quick review / reading • 10 pts)</option>
+            <option value="Moderate" selected>Moderate (Problem set / lab report • 20 pts)</option>
+            <option value="Deep">Deep Focus (Major project / mid-term review • 30 pts)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn-glass-pill" onclick="document.getElementById('modal-add-task').classList.remove('active')">Cancel</button>
+          <button type="submit" class="btn-primary-pill">Save to Roadmap</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: CAMPUS WELLNESS & EMERGENCY SOS NETWORK
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-sos">
+    <div class="modal-sheet">
+      <button class="modal-close-btn" id="btn-close-sos-modal" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div style="margin-bottom: 20px;">
+        <div class="pill-badge" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35); color: #ef4444; margin-bottom: 10px;">
+          <span>Confidential & Available 24/7</span>
+        </div>
+        <h3 class="font-luxury-display" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 4px;">Student Support & Well-Being SOS</h3>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary);">You never have to navigate academic burnout, crisis, or anxiety alone.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="padding: 14px; border-radius: 12px; background: var(--badge-bg); border: var(--badge-border);">
+          <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Campus 24/7 Mental Health Crisis Line</div>
+          <div style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-primary); font-weight: 700; margin: 4px 0;">1-800-273-TALK (8255)</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Direct access to licensed university counselors with zero wait times.</div>
+        </div>
+
+        <div style="padding: 14px; border-radius: 12px; background: var(--badge-bg); border: var(--badge-border);">
+          <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Peer Support & Active Listening Warmline</div>
+          <div style="font-family: var(--font-mono); font-size: 1.1rem; color: var(--text-primary); font-weight: 700; margin: 4px 0;">Text HOME to 741741</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Anonymous chat with trained fellow students who understand academic pressures.</div>
+        </div>
+
+        <div style="padding: 14px; border-radius: 12px; background: var(--badge-bg); border: var(--badge-border);">
+          <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Academic Ombudsperson & Deadline Extensions</div>
+          <div style="font-size: 0.8125rem; color: var(--text-primary); font-weight: 600; margin: 4px 0;">ombuds@university.edu</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Confidential advocacy for medical extensions, mitigating circumstances, and workload relief.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; text-align: center;">
+        <button class="btn-primary-pill" style="width: 100%;" onclick="document.getElementById('modal-sos').classList.remove('active')">
+          I'm Safe • Return to Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 3: STITCH MODULAR LAYOUT & INTERACTIVE THEME STUDIO
+       ==================================================================== -->
+  <div class="modal-overlay" id="modal-theme-settings">
+    <div class="modal-sheet">
+      <button class="modal-close-btn" id="btn-close-theme-modal" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div style="margin-bottom: 20px;">
+        <h3 class="font-luxury-display" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 4px;">Modular Stitch & Background Studio</h3>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary);">Customize the interactive glass effect dots, background optics, and modular widgets.</p>
+      </div>
+
+      <!-- Theme selection -->
+      <div class="form-group">
+        <label class="form-label">Background Atmosphere Presets</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-glass-pill active" id="preset-white-glass" data-bg-theme="liquid-white" style="flex: 1; font-size: 0.75rem;">⚪ Liquid White Glass</button>
+          <button class="btn-glass-pill" id="preset-dark-glass" data-bg-theme="antigravity-dark" style="flex: 1; font-size: 0.75rem;">⚫ Antigravity Dark</button>
+        </div>
+      </div>
+
+      <!-- Interactive Dot Density -->
+      <div class="form-group" style="margin-top: 18px;">
+        <label class="form-label" for="slider-dot-density">Glass Dot Grid Density</label>
+        <input type="range" class="range-slider-liquid" id="slider-dot-density" min="24" max="60" step="4" value="36">
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-top: 4px;">
+          <span>High Density (24px)</span>
+          <span>Airy Minimalist (60px)</span>
+        </div>
+      </div>
+
+      <!-- Cursor Repulsion Physics -->
+      <div class="form-group" style="margin-top: 18px;">
+        <label class="form-label" for="slider-dot-repulsion">Cursor Fluid Repulsion Force</label>
+        <input type="range" class="range-slider-liquid" id="slider-dot-repulsion" min="0.05" max="0.5" step="0.05" value="0.22">
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-top: 4px;">
+          <span>Gentle Float</span>
+          <span>Dynamic Wave</span>
+        </div>
+      </div>
+
+      <!-- Modular Widget Toggles (Stitch Type Customizer) -->
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="form-label">Modular Stitch Visibility</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8125rem;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-workload" checked>
+            <span>Academic Workload</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-focus" checked>
+            <span>Flow Studio</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-wellness" checked>
+            <span>Mental Wellness</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-circadian" checked>
+            <span>Circadian Cadence</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-gpa" checked>
+            <span>Semester Horizon</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" class="task-checkbox" id="toggle-mod-support" checked>
+            <span>Peer Circles</span>
+          </label>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn-primary-pill" onclick="document.getElementById('modal-theme-settings').classList.remove('active')">
+          Save Configuration
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="canvas-bots.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
